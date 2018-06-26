@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -172,9 +173,9 @@ public class FragmentListarPermisosIn extends Fragment {
                 List<Permiso> permisoList = gson.fromJson(response, type);
                 Permiso permiso;
                 AprendizPermiso aprendizPermiso;
-                for (int i=permisoList.size()-1;i>=0; i--){
+                for (int i=0;i<permisoList.size(); i++){
                      permiso = permisoList.get(i);
-                    for (int j=aprendizPermisoListA.size()-1; j>=0; j--){
+                    for (int j=0; j<aprendizFichaListA.size(); j++){
                         aprendizPermiso = aprendizPermisoListA.get(j);
                         if (permiso.getUrl().equals(aprendizPermiso.getPermiso())){
                             permisoListA.add(permiso);
@@ -284,7 +285,7 @@ public class FragmentListarPermisosIn extends Fragment {
                         }
                     }
                 }
-
+                invertirDatos();
                 AdapterIn adapterIn = new AdapterIn(personaListA,fichaListA, getContext());
                 recyclerView.setAdapter(adapterIn);
                 recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL,false));
@@ -292,12 +293,7 @@ public class FragmentListarPermisosIn extends Fragment {
                 adapterIn.setMlistener(new AdapterIn.OnItemClickListener() {
                     @Override
                     public void itemClick(int position) {
-                        personaY = personaListA.get(position);
-                        permisoY = permisoListA.get(position);
-                        aprendizPermisoY = aprendizPermisoListA.get(position);
-                        fichaY = fichaListA.get(position);
-                        Intent intent = new Intent(mContext, DetalleListaInstruc.class);
-                        startActivity(intent);
+                        eventoClickAdapter(position);
                     }
                 });
 
@@ -314,6 +310,49 @@ public class FragmentListarPermisosIn extends Fragment {
 
     }
 
+    public void invertirDatos(){
+        List<Persona> tmpPersonaList=new ArrayList<>();
+        for (int i = personaListA.size()-1; i>0;i++){
+            Persona persona= personaListA.get(i);
+            tmpPersonaList.add(persona);
+        }
+        personaListA=tmpPersonaList;
+
+
+        List<Permiso> tmpPermiso=new ArrayList<>();
+        for (int i = permisoListA.size()-1; i>0;i++){
+            Permiso permiso= permisoListA.get(i);
+            tmpPermiso.add(permiso);
+        }
+        permisoListA=tmpPermiso;
+
+        List<AprendizPermiso> tmpAprendizPermiso=new ArrayList<>();
+        for (int i = aprendizPermisoListA.size()-1; i>0;i++){
+            AprendizPermiso aprendizPermiso= aprendizPermisoListA.get(i);
+            tmpAprendizPermiso.add(aprendizPermiso);
+        }
+        aprendizPermisoListA=tmpAprendizPermiso;
+
+        List<Ficha> tmpFicha=new ArrayList<>();
+        for (int i = fichaListA.size()-1; i>0;i++){
+            Ficha ficha= fichaListA.get(i);
+            tmpFicha.add(ficha);
+        }
+        fichaListA=tmpFicha;
+
+
+
+
+    }
+
+    private void eventoClickAdapter(int position){
+        personaY = personaListA.get(position);
+        permisoY = permisoListA.get(position);
+        aprendizPermisoY = aprendizPermisoListA.get(position);
+        fichaY = fichaListA.get(position);
+        Intent intent = new Intent(mContext, DetalleListaInstruc.class);
+        startActivity(intent);
+    }
 
 
 

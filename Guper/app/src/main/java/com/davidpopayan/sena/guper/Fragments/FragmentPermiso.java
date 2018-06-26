@@ -34,6 +34,7 @@ import com.davidpopayan.sena.guper.Controllers.MainActivity;
 import com.davidpopayan.sena.guper.R;
 import com.davidpopayan.sena.guper.models.AprendizFicha;
 import com.davidpopayan.sena.guper.models.Constantes;
+import com.davidpopayan.sena.guper.models.Ficha;
 import com.davidpopayan.sena.guper.models.Permiso;
 import com.davidpopayan.sena.guper.models.Persona;
 import com.davidpopayan.sena.guper.models.Rol;
@@ -77,8 +78,6 @@ public class FragmentPermiso extends Fragment implements View.OnClickListener{
     DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     public Persona personaP;
     Context mContext;
-
-
 
     public FragmentPermiso() {
         // Required empty public constructor
@@ -164,6 +163,10 @@ public class FragmentPermiso extends Fragment implements View.OnClickListener{
 
             case R.id.btnEnviar:
                 if (txtSolicitarP.getText().length()>0){
+                    Date horaactual = new Date();
+                    DateFormat horactualFormart = new SimpleDateFormat("HH-mm");
+
+
                     solicitar_permiso();
                     btnenviar.setEnabled(false);
                 }else {
@@ -179,16 +182,50 @@ public class FragmentPermiso extends Fragment implements View.OnClickListener{
 
 
     private void obtenerHora11() {
-        numberpicker1();
+        DateFormat format  = new SimpleDateFormat("HH-mm");
+        Date date = new Date();
+        format.format(date);
+        Ficha ficha =Login.fichaA;
+        int horaJ =0;
+        String[] split = format.toString().split(":");
+        int horaP=0;
+        if (split[0].substring(0).equals("0")) {
+            horaP = Integer.parseInt(split[0].substring(1));
+        }else {
+            horaP = Integer.parseInt(split[0]);
+        }
+
+        int horaPasar=0;
+
+        if (ficha.getJornada().equals("Mañana")){
+            horaJ=13;
+
+        }
+
+        if (ficha.getJornada().equals("Tarde")){
+            horaJ=19;
+        }
+
+        if (ficha.getJornada().equals("Noche")){
+            horaJ=21;
+        }
+
+        horaPasar=  horaJ-horaP;
+        if (horaPasar<1){
+            numberpicker1(horaPasar);
+            Toast.makeText(getContext(), "Solo puedes pedir permiso en horas de clase", Toast.LENGTH_SHORT).show();
+        }else {
+            numberpicker1(horaPasar);
+        }
 
 
     }
 
 
-    private void numberpicker1(){
+    private void numberpicker1(int vmax){
         NumberPicker mynumberpicker = new NumberPicker(getActivity());
-        mynumberpicker.setMaxValue(6);
-        mynumberpicker.setMinValue(0);
+        mynumberpicker.setMaxValue(vmax);
+        mynumberpicker.setMinValue(1);
         NumberPicker.OnValueChangeListener myvaluechange = new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
@@ -230,7 +267,7 @@ public class FragmentPermiso extends Fragment implements View.OnClickListener{
                 }else {
                     AM_PM = "p.m.";
                 }
-                txtHora1.setText(hora + DOS_PUNTOS + minuto + "" + AM_PM);
+                txtHora1.setText(hora + DOS_PUNTOS + minuto);
 
             }
         }, hora , minuto , false);
