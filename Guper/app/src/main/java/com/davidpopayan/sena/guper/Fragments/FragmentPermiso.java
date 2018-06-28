@@ -45,12 +45,14 @@ import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Type;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -143,6 +145,8 @@ public class FragmentPermiso extends Fragment implements View.OnClickListener{
     public void onStart() {
         super.onStart();
         personaP = Login.personaT;
+        btnenviar.setEnabled(true);
+        btnenviar.setEnabled(true);
 
     }
 
@@ -163,12 +167,29 @@ public class FragmentPermiso extends Fragment implements View.OnClickListener{
 
             case R.id.btnEnviar:
                 if (txtSolicitarP.getText().length()>0){
-                    Date horaactual = new Date();
-                    DateFormat horactualFormart = new SimpleDateFormat("HH-mm");
+                    Date horapermiso = new Date();
+                    DateFormat horapermisoFormart = new SimpleDateFormat("HH:mm");
+                    String horaPermisoS= txtHoraT1.getText().toString();
+
+                    Date horaActual = new Date();
+                    try {
+                        horapermiso=horapermisoFormart.parse(horaPermisoS);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                        Toast.makeText(mContext, "Hay un error en la hora", Toast.LENGTH_SHORT).show();
+                    }
+
+                    if (horaActual.compareTo(horapermiso)<=0){
+                        solicitar_permiso();
+                        btnenviar.setEnabled(false);    
+                    }else {
+                        Toast.makeText(mContext, "La hora del permiso no es correcta", Toast.LENGTH_SHORT).show();
+                        btnenviar.setEnabled(true);
+                    }
 
 
-                    solicitar_permiso();
-                    btnenviar.setEnabled(false);
+
+                    
                 }else {
                     Toast.makeText(mContext, "Por favor escriba del porque va a salir", Toast.LENGTH_SHORT).show();
                     btnenviar.setEnabled(true);
@@ -212,7 +233,6 @@ public class FragmentPermiso extends Fragment implements View.OnClickListener{
 
         horaPasar=  horaJ-horaP;
         if (horaPasar<1){
-            numberpicker1(horaPasar);
             Toast.makeText(getContext(), "Solo puedes pedir permiso en horas de clase", Toast.LENGTH_SHORT).show();
         }else {
             numberpicker1(horaPasar);

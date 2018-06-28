@@ -27,6 +27,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.davidpopayan.sena.guper.Controllers.ListaAprendices;
+import com.davidpopayan.sena.guper.Controllers.Login;
 import com.davidpopayan.sena.guper.Controllers.MainActivity;
 import com.davidpopayan.sena.guper.R;
 import com.davidpopayan.sena.guper.models.AprendizFicha;
@@ -40,6 +41,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -104,8 +106,26 @@ public class FragmentPermisoIn extends Fragment {
             public void onClick(View v) {
                 if (txtmotivo.getText().length()>0 && (!txthoras.getText().toString().equals("hh:mm:ss"))
                         && (!txthoras2.getText().toString().equals("hh:mm:ss"))){
-                    mandarDatos();
-                    btnEnviar.setEnabled(false);
+                    Date horapermiso = new Date();
+                    DateFormat horapermisoFormart = new SimpleDateFormat("HH:mm");
+                    String horaPermisoS= txthoras2.getText().toString();
+
+                    Date horaActual = new Date();
+                    try {
+                        horapermiso=horapermisoFormart.parse(horaPermisoS);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                        Toast.makeText(getContext(), "Hay un error en la hora", Toast.LENGTH_SHORT).show();
+                    }
+
+                    if (horaActual.compareTo(horapermiso)<=0){
+                        mandarDatos();
+                        btnEnviar.setEnabled(false);
+                    }else {
+                        Toast.makeText(getContext(), "La hora del permiso no es correcta", Toast.LENGTH_SHORT).show();
+                        btnEnviar.setEnabled(true);
+                    }
+
                 }else {
                     Toast.makeText(getContext(), "Por Favor envie los datos correctamente", Toast.LENGTH_SHORT).show();
                     btnEnviar.setEnabled(true);
@@ -118,7 +138,7 @@ public class FragmentPermisoIn extends Fragment {
         btnhora1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                numberpicker1();
+                obtenerHora11();
             }
         });
 
@@ -132,6 +152,46 @@ public class FragmentPermisoIn extends Fragment {
 
         return view;
     }
+
+    private void obtenerHora11() {
+        DateFormat format  = new SimpleDateFormat("HH-mm");
+        Date date = new Date();
+        format.format(date);
+        Ficha ficha = Login.fichaA;
+        int horaJ =0;
+        String[] split = format.toString().split(":");
+        int horaP=0;
+        if (split[0].substring(0).equals("0")) {
+            horaP = Integer.parseInt(split[0].substring(1));
+        }else {
+            horaP = Integer.parseInt(split[0]);
+        }
+
+        int horaPasar=0;
+
+        if (ficha.getJornada().equals("Mañana")){
+            horaJ=13;
+
+        }
+
+        if (ficha.getJornada().equals("Tarde")){
+            horaJ=19;
+        }
+
+        if (ficha.getJornada().equals("Noche")){
+            horaJ=21;
+        }
+
+        horaPasar=  horaJ-horaP;
+        if (horaPasar<1){
+            Toast.makeText(getContext(), "Solo puedes pedir permiso en horas de clase", Toast.LENGTH_SHORT).show();
+        }else {
+            numberpicker1(horaPasar);
+        }
+
+
+    }
+
 
 
     private void fechapicker(){
@@ -148,7 +208,7 @@ public class FragmentPermisoIn extends Fragment {
                 }else {
                     AM_PM = "p.m.";
                 }
-                txthoras2.setText(hora + DOS_PUNTOS + minuto + "" + AM_PM);
+                txthoras2.setText(hora + DOS_PUNTOS + minuto);
 
             }
         }, hora , minuto , false);
@@ -156,10 +216,10 @@ public class FragmentPermisoIn extends Fragment {
     }
 
 
-    private void numberpicker1(){
+    private void numberpicker1(int vmax){
         NumberPicker mynumberpicker = new NumberPicker(getActivity());
-        mynumberpicker.setMaxValue(6);
-        mynumberpicker.setMinValue(0);
+        mynumberpicker.setMaxValue(vmax);
+        mynumberpicker.setMinValue(1);
         NumberPicker.OnValueChangeListener myvaluechange = new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {

@@ -2,11 +2,14 @@ package com.davidpopayan.sena.guper.Fragments;
 
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +24,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.davidpopayan.sena.guper.Controllers.Login;
@@ -31,6 +36,13 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +60,7 @@ public class FragmentPerfil extends Fragment implements View.OnClickListener{
     Persona personaP= new Persona();
     User userP= new User() ;
     TextView txtnombre, txtapellidos, txttelefono,txtdocumento, txtemail, txtpassword;
+    Uri path;
     boolean bandera=false;
     boolean bandera1=false;
     boolean hiloB=true;
@@ -135,7 +148,8 @@ public class FragmentPerfil extends Fragment implements View.OnClickListener{
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-            Uri path = data.getData();
+            path = data.getData();
+            Toast.makeText(getContext(), path.getPath(), Toast.LENGTH_SHORT).show();
             imgPerfil.setImageURI(path);
             bandera1 = true;
         }
@@ -151,6 +165,29 @@ public class FragmentPerfil extends Fragment implements View.OnClickListener{
 
                 break;
         }
+    }
+
+    public static String encode(String filePath) {
+
+        InputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(filePath);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        byte[] bytes;
+        byte[] buffer = new byte[8192];
+        int bytesRead;
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try {
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                output.write(buffer, 0, bytesRead);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        bytes = output.toByteArray();
+        return Base64.encodeToString(bytes, Base64.DEFAULT);
     }
 
     private void guardarTelefono(final View v) {
@@ -174,12 +211,23 @@ public class FragmentPerfil extends Fragment implements View.OnClickListener{
                 parameters.put("nombres",Login.personaT.getNombres());
                 parameters.put("apellidos",Login.personaT.getApellidos());
                 Login.personaT.setTelefono(txttelefono.getText().toString());
-                parameters.put("telefono", Login.personaT.getTelefono());
+                try {
+                    parameters.put("imgPerfil",encode(path.getPath()));
+                }catch (Exception e){
 
+                }
+                parameters.put("telefono", Login.personaT.getTelefono());
                 parameters.put("usuario",Login.personaT.getUsuario());
                 return  parameters;
             }
+
         };
+
+
+
+
+
+
         requestQueue.add(stringRequest);
 
     }

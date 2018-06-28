@@ -77,6 +77,8 @@
     <string name="contrasena">Constraseña</string>
     <string name="cambiarcontraseña">Cambiar Contraseña</string>
     <string name="ficha">Ficha:</string>
+    <string name="recuperarContra">Recuperar Constraseña</string>
+    <string name="cambiarContra">Cambiar contraseña</string>
 
 
 </resources>

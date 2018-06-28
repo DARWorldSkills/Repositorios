@@ -41,10 +41,13 @@
         <activity
             android:name=".Controllers.DetallePermisoAprendiz"
             android:screenOrientation="portrait" />
-        <activity android:name=".Controllers.ListaAprendices"
+        <activity
+            android:name=".Controllers.ListaAprendices"
             android:screenOrientation="portrait" />
-        <activity android:name=".Controllers.CambioDeContrasena"
-            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".Controllers.CambioDeContrasena"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Controllers.RecuperarContrasena"></activity>
     </application>
 
 </manifest>
