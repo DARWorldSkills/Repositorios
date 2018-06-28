@@ -39,6 +39,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -55,7 +56,7 @@ import static android.app.Activity.RESULT_OK;
  */
 public class FragmentPerfil extends Fragment implements View.OnClickListener{
 
-    ImageView imgPerfil;
+    static ImageView imgPerfil;
     Button btnCambiarP,btnGuardar;
     Persona personaP= new Persona();
     User userP= new User() ;
@@ -167,27 +168,13 @@ public class FragmentPerfil extends Fragment implements View.OnClickListener{
         }
     }
 
-    public static String encode(String filePath) {
-
-        InputStream inputStream = null;
-        try {
-            inputStream = new FileInputStream(filePath);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        byte[] bytes;
-        byte[] buffer = new byte[8192];
-        int bytesRead;
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        try {
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                output.write(buffer, 0, bytesRead);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        bytes = output.toByteArray();
-        return Base64.encodeToString(bytes, Base64.DEFAULT);
+    public static String encode() {
+        imgPerfil.buildDrawingCache();
+        Bitmap bitmap = imgPerfil.getDrawingCache();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] b = baos.toByteArray();
+        return Base64.encodeToString(b, Base64.DEFAULT);
     }
 
     private void guardarTelefono(final View v) {
@@ -211,11 +198,7 @@ public class FragmentPerfil extends Fragment implements View.OnClickListener{
                 parameters.put("nombres",Login.personaT.getNombres());
                 parameters.put("apellidos",Login.personaT.getApellidos());
                 Login.personaT.setTelefono(txttelefono.getText().toString());
-                try {
-                    parameters.put("imgPerfil",encode(path.getPath()));
-                }catch (Exception e){
-
-                }
+                parameters.put("imgPerfil",encode());
                 parameters.put("telefono", Login.personaT.getTelefono());
                 parameters.put("usuario",Login.personaT.getUsuario());
                 return  parameters;

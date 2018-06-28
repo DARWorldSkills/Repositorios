@@ -113,17 +113,16 @@ public class FragmentPermisoIn extends Fragment {
                     Date horaActual = new Date();
                     try {
                         horapermiso=horapermisoFormart.parse(horaPermisoS);
+                        if (horaActual.compareTo(horapermiso)<=0){
+                            mandarDatos();
+                            btnEnviar.setEnabled(false);
+                        }else {
+                            Toast.makeText(getContext(), "La hora del permiso no es correcta", Toast.LENGTH_SHORT).show();
+                            btnEnviar.setEnabled(true);
+                        }
                     } catch (ParseException e) {
                         e.printStackTrace();
-                        Toast.makeText(getContext(), "Hay un error en la hora", Toast.LENGTH_SHORT).show();
-                    }
 
-                    if (horaActual.compareTo(horapermiso)<=0){
-                        mandarDatos();
-                        btnEnviar.setEnabled(false);
-                    }else {
-                        Toast.makeText(getContext(), "La hora del permiso no es correcta", Toast.LENGTH_SHORT).show();
-                        btnEnviar.setEnabled(true);
                     }
 
                 }else {
@@ -154,18 +153,14 @@ public class FragmentPermisoIn extends Fragment {
     }
 
     private void obtenerHora11() {
-        DateFormat format  = new SimpleDateFormat("HH-mm");
+        DateFormat format  = new SimpleDateFormat("HH:mm");
         Date date = new Date();
         format.format(date);
         Ficha ficha = Login.fichaA;
         int horaJ =0;
         String[] split = format.toString().split(":");
         int horaP=0;
-        if (split[0].substring(0).equals("0")) {
-            horaP = Integer.parseInt(split[0].substring(1));
-        }else {
-            horaP = Integer.parseInt(split[0]);
-        }
+        horaP = format.getCalendar().getTime().getHours();
 
         int horaPasar=0;
 
@@ -183,7 +178,7 @@ public class FragmentPermisoIn extends Fragment {
         }
 
         horaPasar=  horaJ-horaP;
-        if (horaPasar<1){
+        if (horaPasar<1 || horaPasar>=6){
             Toast.makeText(getContext(), "Solo puedes pedir permiso en horas de clase", Toast.LENGTH_SHORT).show();
         }else {
             numberpicker1(horaPasar);
@@ -219,7 +214,7 @@ public class FragmentPermisoIn extends Fragment {
     private void numberpicker1(int vmax){
         NumberPicker mynumberpicker = new NumberPicker(getActivity());
         mynumberpicker.setMaxValue(vmax);
-        mynumberpicker.setMinValue(1);
+        mynumberpicker.setMinValue(0);
         NumberPicker.OnValueChangeListener myvaluechange = new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {

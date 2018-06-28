@@ -169,27 +169,25 @@ public class FragmentPermiso extends Fragment implements View.OnClickListener{
                 if (txtSolicitarP.getText().length()>0){
                     Date horapermiso = new Date();
                     DateFormat horapermisoFormart = new SimpleDateFormat("HH:mm");
-                    String horaPermisoS= txtHoraT1.getText().toString();
+                    String horaPermisoS= txtHora1.getText().toString();
+                    Toast.makeText(mContext, horaPermisoS, Toast.LENGTH_SHORT).show();
 
                     Date horaActual = new Date();
                     try {
                         horapermiso=horapermisoFormart.parse(horaPermisoS);
+                        if (horaActual.compareTo(horapermiso)<=0){
+                            solicitar_permiso();
+                            btnenviar.setEnabled(false);
+                        }else {
+                            Toast.makeText(mContext, "La hora del permiso no es correcta", Toast.LENGTH_SHORT).show();
+                            btnenviar.setEnabled(true);
+                        }
                     } catch (ParseException e) {
                         e.printStackTrace();
-                        Toast.makeText(mContext, "Hay un error en la hora", Toast.LENGTH_SHORT).show();
-                    }
 
-                    if (horaActual.compareTo(horapermiso)<=0){
-                        solicitar_permiso();
-                        btnenviar.setEnabled(false);    
-                    }else {
-                        Toast.makeText(mContext, "La hora del permiso no es correcta", Toast.LENGTH_SHORT).show();
-                        btnenviar.setEnabled(true);
                     }
 
 
-
-                    
                 }else {
                     Toast.makeText(mContext, "Por favor escriba del porque va a salir", Toast.LENGTH_SHORT).show();
                     btnenviar.setEnabled(true);
@@ -203,18 +201,14 @@ public class FragmentPermiso extends Fragment implements View.OnClickListener{
 
 
     private void obtenerHora11() {
-        DateFormat format  = new SimpleDateFormat("HH-mm");
+        DateFormat format  = new SimpleDateFormat("HH:mm");
         Date date = new Date();
         format.format(date);
         Ficha ficha =Login.fichaA;
         int horaJ =0;
         String[] split = format.toString().split(":");
         int horaP=0;
-        if (split[0].substring(0).equals("0")) {
-            horaP = Integer.parseInt(split[0].substring(1));
-        }else {
-            horaP = Integer.parseInt(split[0]);
-        }
+        horaP = format.getCalendar().getTime().getHours();
 
         int horaPasar=0;
 
@@ -232,7 +226,7 @@ public class FragmentPermiso extends Fragment implements View.OnClickListener{
         }
 
         horaPasar=  horaJ-horaP;
-        if (horaPasar<1){
+        if (horaPasar<1 || horaPasar>=6){
             Toast.makeText(getContext(), "Solo puedes pedir permiso en horas de clase", Toast.LENGTH_SHORT).show();
         }else {
             numberpicker1(horaPasar);
@@ -245,7 +239,7 @@ public class FragmentPermiso extends Fragment implements View.OnClickListener{
     private void numberpicker1(int vmax){
         NumberPicker mynumberpicker = new NumberPicker(getActivity());
         mynumberpicker.setMaxValue(vmax);
-        mynumberpicker.setMinValue(1);
+        mynumberpicker.setMinValue(0);
         NumberPicker.OnValueChangeListener myvaluechange = new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
@@ -319,7 +313,7 @@ public class FragmentPermiso extends Fragment implements View.OnClickListener{
                 parameters.put("motivo",spMotivo.getSelectedItem().toString());
                 parameters.put("solicitoPermisoPor",txtSolicitarP.getText().toString());
                 parameters.put("permisoPorHora",txtHoraT1.getText().toString());
-                parameters.put("permisoPorDias","2");
+                parameters.put("permisoPorDias","");
                 parameters.put("horaSalida",txtHora1.getText().toString());
                 parameters.put("fecha",dateFormat.format(date));
 
