@@ -101,7 +101,7 @@ public class DetalleListaInstruc extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.PUT, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Toast.makeText(DetalleListaInstruc.this, "Ha terminado la tarea completa", Toast.LENGTH_SHORT).show();
+                Toast.makeText(DetalleListaInstruc.this, "Se ha actualizado el permiso", Toast.LENGTH_SHORT).show();
             }
         }, new Response.ErrorListener() {
             @Override

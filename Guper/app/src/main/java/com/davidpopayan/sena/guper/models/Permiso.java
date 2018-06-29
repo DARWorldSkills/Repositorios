@@ -5,7 +5,6 @@ public class Permiso {
     private String motivo;
     private String solicitoPermisoPor;
     private String permisoPorHora;
-    private String permisoPorDias;
     private String horaSalida;
     private String fecha;
 
@@ -42,14 +41,6 @@ public class Permiso {
 
     public void setPermisoPorHora(String permisoPorHora) {
         this.permisoPorHora = permisoPorHora;
-    }
-
-    public String getPermisoPorDias() {
-        return permisoPorDias;
-    }
-
-    public void setPermisoPorDias(String permisoPorDias) {
-        this.permisoPorDias = permisoPorDias;
     }
 
     public String getHoraSalida() {

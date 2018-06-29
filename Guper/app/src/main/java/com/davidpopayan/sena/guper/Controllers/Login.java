@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -24,6 +25,7 @@ import com.davidpopayan.sena.guper.models.Ficha;
 import com.davidpopayan.sena.guper.models.Persona;
 import com.davidpopayan.sena.guper.models.Rol;
 import com.davidpopayan.sena.guper.models.RolPersona;
+import com.davidpopayan.sena.guper.models.Token;
 import com.davidpopayan.sena.guper.models.User;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -108,6 +110,9 @@ public class Login extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 obtenerUrlUsuario(username);
+                Gson gson = new Gson();
+                Token token = gson.fromJson(response,Token.class);
+                Toast.makeText(Login.this, token.getToken(), Toast.LENGTH_SHORT).show();
             }
         }, new Response.ErrorListener() {
             @Override

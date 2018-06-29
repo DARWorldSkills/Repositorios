@@ -280,6 +280,7 @@ public class MainActivity extends AppCompatActivity
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                rolPersonaAList.clear();
                 Gson gson = new Gson();
                 Type type = new TypeToken<List<RolPersona>>(){}.getType();
                 List<RolPersona> rolPersonaList = gson.fromJson(response,type);
@@ -309,6 +310,7 @@ public class MainActivity extends AppCompatActivity
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                personaAList.clear();
                 Gson gson = new Gson();
                 Type type = new TypeToken<List<Persona>>(){}.getType();
                 List<Persona> personaList = gson.fromJson(response,type);
@@ -343,6 +345,7 @@ public class MainActivity extends AppCompatActivity
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                instructorList.clear();
                 Gson gson = new Gson();
                 Type type = new TypeToken<List<AprendizFicha>>(){}.getType();
                 List<AprendizFicha> aprendizFichaList = gson.fromJson(response,type);
@@ -377,6 +380,7 @@ public class MainActivity extends AppCompatActivity
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                aprendizFichaListA.clear();
                 Gson gson = new Gson();
                 Type type = new TypeToken<List<AprendizFicha>>(){}.getType();
                 List<AprendizFicha> aprendizFichaList = gson.fromJson(response,type);
@@ -407,6 +411,7 @@ public class MainActivity extends AppCompatActivity
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                fichaListA.clear();
                 Gson gson = new Gson();
                 Type type = new TypeToken<List<Ficha>>(){}.getType();
                 List<Ficha> fichaList = gson.fromJson(response,type);

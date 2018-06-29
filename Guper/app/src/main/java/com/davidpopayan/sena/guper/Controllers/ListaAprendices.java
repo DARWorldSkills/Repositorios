@@ -62,7 +62,10 @@ public class ListaAprendices extends AppCompatActivity {
             }
         });
 
+
     }
+
+
 
     public void inizializar(){
 
@@ -72,9 +75,11 @@ public class ListaAprendices extends AppCompatActivity {
 
     public void listarRecycler(){
         AdapterListarA adapterListarA = new AdapterListarA(personaList);
+
         recyclerView.setAdapter(adapterListarA);
         recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false));
         recyclerView.setHasFixedSize(true);
+
 
 
     }
@@ -122,7 +127,6 @@ public class ListaAprendices extends AppCompatActivity {
                 parameters.put("motivo","Otro");
                 parameters.put("solicitoPermisoPor", motivo);
                 parameters.put("permisoPorHora",FragmentPermisoIn.horas);
-                parameters.put("permisoPorDias","");
                 parameters.put("horaSalida", FragmentPermisoIn.horasalida);
                 parameters.put("fecha",FragmentPermisoIn.fecha);
 
@@ -153,6 +157,7 @@ public class ListaAprendices extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> parameters = new HashMap<>();
                 parameters.put("estado","Aprobado");
+                parameters.put("grupal","true");
                 parameters.put("instructor",Integer.toString(Login.personaT.getId()));
                 parameters.put("permiso",permiso.getUrl());
                 parameters.put("persona",persona.getUrl());

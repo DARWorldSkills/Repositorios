@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -167,25 +168,8 @@ public class FragmentPermiso extends Fragment implements View.OnClickListener{
 
             case R.id.btnEnviar:
                 if (txtSolicitarP.getText().length()>0){
-                    Date horapermiso = new Date();
-                    DateFormat horapermisoFormart = new SimpleDateFormat("HH:mm");
-                    String horaPermisoS= txtHora1.getText().toString();
-                    Toast.makeText(mContext, horaPermisoS, Toast.LENGTH_SHORT).show();
+                    validarHora();
 
-                    Date horaActual = new Date();
-                    try {
-                        horapermiso=horapermisoFormart.parse(horaPermisoS);
-                        if (horaActual.compareTo(horapermiso)<=0){
-                            solicitar_permiso();
-                            btnenviar.setEnabled(false);
-                        }else {
-                            Toast.makeText(mContext, "La hora del permiso no es correcta", Toast.LENGTH_SHORT).show();
-                            btnenviar.setEnabled(true);
-                        }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-
-                    }
 
 
                 }else {
@@ -196,6 +180,48 @@ public class FragmentPermiso extends Fragment implements View.OnClickListener{
 
 
                 break;
+        }
+    }
+
+    private void validarHora() {
+
+        Date horapermiso = new Date();
+        DateFormat horapermisoFormart = new SimpleDateFormat("HH:mm");
+        String horaPermisoS= txtHora1.getText().toString();
+        Ficha ficha = Login.fichaA;
+        int horaMax=0;
+        int horaM=0;
+        if (ficha.getJornada().equals("Mañana")){
+            horaMax=12;
+            horaM=7;
+        }
+
+        if (ficha.getJornada().equals("Tarde")){
+            horaMax=18;
+            horaM=13;
+        }
+
+        if (ficha.getJornada().equals("Noche")){
+            horaMax=20;
+            horaM=19;
+        }
+
+
+        Date horaActual = new Date();
+        try {
+            horapermiso=horapermisoFormart.parse(horaPermisoS);
+            int horapermi=horapermiso.getHours();
+            if (horaActual.getHours()>=horapermi && horapermi>horaM &&
+                    horapermi<horaMax){
+                solicitar_permiso();
+                btnenviar.setEnabled(false);
+            }else {
+                Toast.makeText(getContext(), "La hora del permiso no es correcta", Toast.LENGTH_SHORT).show();
+                btnenviar.setEnabled(true);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+
         }
     }
 
@@ -304,6 +330,7 @@ public class FragmentPermiso extends Fragment implements View.OnClickListener{
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(mContext, "No se ha llenado los datos necesarios", Toast.LENGTH_SHORT).show();
+                Log.e("ASDASDASDASDASD",error.toString());
                 btnenviar.setEnabled(true);
             }
         }){
@@ -311,9 +338,9 @@ public class FragmentPermiso extends Fragment implements View.OnClickListener{
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> parameters = new HashMap<>();
                 parameters.put("motivo",spMotivo.getSelectedItem().toString());
+                parameters.put("grupal","false");
                 parameters.put("solicitoPermisoPor",txtSolicitarP.getText().toString());
                 parameters.put("permisoPorHora",txtHoraT1.getText().toString());
-                parameters.put("permisoPorDias","");
                 parameters.put("horaSalida",txtHora1.getText().toString());
                 parameters.put("fecha",dateFormat.format(date));
 

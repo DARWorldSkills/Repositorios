@@ -28,6 +28,7 @@ import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.davidpopayan.sena.guper.Controllers.CambioDeContrasena;
 import com.davidpopayan.sena.guper.Controllers.Login;
 import com.davidpopayan.sena.guper.R;
 import com.davidpopayan.sena.guper.models.Persona;
@@ -57,7 +58,7 @@ import static android.app.Activity.RESULT_OK;
 public class FragmentPerfil extends Fragment implements View.OnClickListener{
 
     static ImageView imgPerfil;
-    Button btnCambiarP,btnGuardar;
+    Button btnCambiarP,btnGuardar, btncontrasena;
     Persona personaP= new Persona();
     User userP= new User() ;
     TextView txtnombre, txtapellidos, txttelefono,txtdocumento, txtemail, txtpassword;
@@ -104,6 +105,14 @@ public class FragmentPerfil extends Fragment implements View.OnClickListener{
             }
         });
 
+        btncontrasena.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getActivity(), CambioDeContrasena.class);
+                startActivity(intent);
+            }
+        });
         return view;
     }
 
@@ -133,7 +142,7 @@ public class FragmentPerfil extends Fragment implements View.OnClickListener{
         txttelefono = v.findViewById(R.id.txttelefonoPerfil);
         txtdocumento = v.findViewById(R.id.txtdocumentoPerfil);
         txtemail = v.findViewById(R.id.txtCorreoPerfil);
-
+        btncontrasena = v.findViewById(R.id.btnCambioCo);
 
 
     }

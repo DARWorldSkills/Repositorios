@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -71,6 +72,7 @@ public class FragmentPermisoIn extends Fragment {
     List<AprendizFicha> aprendizFichaListA = new ArrayList<>();
     List<Rol> rolList = new ArrayList<>();
     List<RolPersona> rolPersonaAList = new ArrayList<>();
+    boolean banderaFicha = false;
 
     Ficha fichaA;
     Date date = new Date();
@@ -101,32 +103,17 @@ public class FragmentPermisoIn extends Fragment {
         listarFichas();
         listarMotivos();
         requestQueue = Volley.newRequestQueue(getContext());
+        boolean banderaFicha = false;
+        obtenerFicha1();
         btnEnviar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (txtmotivo.getText().length()>0 && (!txthoras.getText().toString().equals("hh:mm:ss"))
                         && (!txthoras2.getText().toString().equals("hh:mm:ss"))){
-                    Date horapermiso = new Date();
-                    DateFormat horapermisoFormart = new SimpleDateFormat("HH:mm");
-                    String horaPermisoS= txthoras2.getText().toString();
-
-                    Date horaActual = new Date();
-                    try {
-                        horapermiso=horapermisoFormart.parse(horaPermisoS);
-                        if (horaActual.compareTo(horapermiso)<=0){
-                            mandarDatos();
-                            btnEnviar.setEnabled(false);
-                        }else {
-                            Toast.makeText(getContext(), "La hora del permiso no es correcta", Toast.LENGTH_SHORT).show();
-                            btnEnviar.setEnabled(true);
-                        }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-
-                    }
+                    validarHora();
 
                 }else {
-                    Toast.makeText(getContext(), "Por Favor envie los datos correctamente", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Por Favor llene todos los campos", Toast.LENGTH_SHORT).show();
                     btnEnviar.setEnabled(true);
                 }
 
@@ -148,40 +135,105 @@ public class FragmentPermisoIn extends Fragment {
             }
         });
 
+        spFicha.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                txthoras.setText(getString(R.string.horato));
+                txthoras2.setText(getString(R.string.hora));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         return view;
     }
 
-    private void obtenerHora11() {
-        DateFormat format  = new SimpleDateFormat("HH:mm");
-        Date date = new Date();
-        format.format(date);
-        Ficha ficha = Login.fichaA;
-        int horaJ =0;
-        String[] split = format.toString().split(":");
-        int horaP=0;
-        horaP = format.getCalendar().getTime().getHours();
+    private void validarHora() {
+        obtenerFicha1();
+        if (banderaFicha==true) {
+            Date horapermiso = new Date();
+            DateFormat horapermisoFormart = new SimpleDateFormat("HH:mm");
+            String horaPermisoS = txthoras2.getText().toString();
+            Ficha ficha = fichaA;
+            int horaMax = 0;
+            int horaM = 0;
+            if (ficha.getJornada().equals("Mañana")) {
+                horaMax = 12;
+                horaM = 7;
+            }
 
-        int horaPasar=0;
+            if (ficha.getJornada().equals("Tarde")) {
+                horaMax = 18;
+                horaM = 13;
+            }
 
-        if (ficha.getJornada().equals("Mañana")){
-            horaJ=13;
+            if (ficha.getJornada().equals("Noche")) {
+                horaMax = 20;
+                horaM = 19;
+            }
 
-        }
 
-        if (ficha.getJornada().equals("Tarde")){
-            horaJ=19;
-        }
+            Date horaActual = new Date();
+            try {
+                horapermiso = horapermisoFormart.parse(horaPermisoS);
+                int horapermi = horapermiso.getHours();
+                if (horaActual.getHours() >= horapermi && horapermi > horaM &&
+                        horapermi < horaMax) {
+                    mandarDatos();
+                    btnEnviar.setEnabled(false);
+                } else {
+                    Toast.makeText(getContext(), "La hora del permiso no es correcta", Toast.LENGTH_SHORT).show();
+                    btnEnviar.setEnabled(true);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
 
-        if (ficha.getJornada().equals("Noche")){
-            horaJ=21;
-        }
-
-        horaPasar=  horaJ-horaP;
-        if (horaPasar<1 || horaPasar>=6){
-            Toast.makeText(getContext(), "Solo puedes pedir permiso en horas de clase", Toast.LENGTH_SHORT).show();
+            }
         }else {
-            numberpicker1(horaPasar);
+            Toast.makeText(getContext(), "Por favor presione de nuevo", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void obtenerHora11() {
+        obtenerFicha1();
+        if (banderaFicha==true) {
+            DateFormat format = new SimpleDateFormat("HH:mm");
+            Date date = new Date();
+            format.format(date);
+            Ficha ficha = fichaA;
+            int horaJ = 0;
+            String[] split = format.toString().split(":");
+            int horaP = 0;
+            horaP = format.getCalendar().getTime().getHours();
+
+            int horaPasar = 0;
+
+            if (ficha.getJornada().equals("Mañana")) {
+                horaJ = 13;
+
+            }
+
+            if (ficha.getJornada().equals("Tarde")) {
+                horaJ = 19;
+            }
+
+            if (ficha.getJornada().equals("Noche")) {
+                horaJ = 21;
+            }
+
+            horaPasar = horaJ - horaP;
+            if (horaPasar < 1 || horaPasar > 6) {
+                Toast.makeText(getContext(), "Solo puedes pedir permiso en horas de clase" + horaPasar, Toast.LENGTH_SHORT).show();
+            } else {
+                numberpicker1(horaPasar);
+            }
+
+            banderaFicha=false;
+        }else {
+            Toast.makeText(getContext(), "Por favor presione de nuevo", Toast.LENGTH_SHORT).show();
         }
 
 
@@ -293,6 +345,7 @@ public class FragmentPermisoIn extends Fragment {
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+
                 Gson gson = new Gson();
                 Type type = new TypeToken<List<Ficha>>(){}.getType();
                 List<Ficha> fichaList = gson.fromJson(response, type);
@@ -317,12 +370,44 @@ public class FragmentPermisoIn extends Fragment {
         requestQueue.add(stringRequest);
     }
 
+    public void obtenerFicha1() {
+        String url = Constantes.urlFicha;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                Gson gson = new Gson();
+                Type type = new TypeToken<List<Ficha>>(){}.getType();
+                List<Ficha> fichaList = gson.fromJson(response, type);
+                Ficha ficha;
+                for (int i = 0; i < fichaList.size(); i++) {
+                    ficha = fichaList.get(i);
+                    if (spFicha.getSelectedItem().toString().equals(ficha.getNumeroFicha())) {
+                        fichaA = ficha;
+                    }
+                }
+
+                banderaFicha=true;
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        requestQueue.add(stringRequest);
+    }
+
+
 
     public void listarAprendizFicha() {
         String url = Constantes.urlAprendizFicha;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                aprendizFichaListA.clear();
                 Gson gson = new Gson();
                 Type type = new TypeToken<List<AprendizFicha>>(){}.getType();
                 List<AprendizFicha> aprendizFichaList = gson.fromJson(response, type);
@@ -331,6 +416,7 @@ public class FragmentPermisoIn extends Fragment {
                     aprendizFicha=aprendizFichaList.get(i);
                     if (fichaA.getUrl().equals(aprendizFicha.getFicha())){
                         aprendizFichaListA.add(aprendizFicha);
+
 
                     }
                 }
@@ -353,6 +439,7 @@ public class FragmentPermisoIn extends Fragment {
             @Override
             public void onResponse(String response) {
                 Gson gson = new Gson();
+                rolPersonaAList.clear();
                 Type type = new TypeToken<List<RolPersona>>(){}.getType();
                 List<RolPersona> rolPersonaList = gson.fromJson(response,type);
                 for (int i=0; i<rolPersonaList.size(); i++){
@@ -383,6 +470,7 @@ public class FragmentPermisoIn extends Fragment {
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                aprendizListA.clear();
                 Gson gson = new Gson();
                 Type type = new TypeToken<List<Persona>>(){}.getType();
                 List<Persona> personaList = gson.fromJson(response, type);

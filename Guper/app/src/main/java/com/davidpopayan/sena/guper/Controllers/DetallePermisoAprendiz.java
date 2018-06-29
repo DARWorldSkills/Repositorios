@@ -84,7 +84,6 @@ public class DetallePermisoAprendiz extends AppCompatActivity {
         txtfecha.setText(permiso.getFecha());
         txtmotivo.setText(permiso.getMotivo()+"\n"+permiso.getSolicitoPermisoPor());
         txthoras.setText(permiso.getPermisoPorHora());
-        txtdias.setText(permiso.getPermisoPorDias());
         txthorasalida.setText(permiso.getHoraSalida());
         txtficha.setText(Login.fichaA.getNumeroFicha());
 

@@ -138,7 +138,7 @@
                             android:layout_marginEnd="62dp"
                             android:enabled="false"
                             android:fontFamily="@font/raleway_light"
-                            android:hint="@string/hora"
+                            android:hint="@string/horato"
                             android:textColor="@color/colorPrimaryDark"
                             android:textSize="16sp" />
 

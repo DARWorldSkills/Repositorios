@@ -47,7 +47,7 @@
         <activity
             android:name=".Controllers.CambioDeContrasena"
             android:screenOrientation="portrait" />
-        <activity android:name=".Controllers.RecuperarContrasena"></activity>
+        <activity android:name=".Controllers.RecuperarContrasena" android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

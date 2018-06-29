@@ -39,7 +39,6 @@ public class AdapterListarA extends RecyclerView.Adapter<AdapterListarA.Holder> 
         holder.listarAprendices(personaList.get(position));
 
         holder.checkBox.setOnCheckedChangeListener(null);
-        holder.checkBox.setChecked(personaList.get(position).isSelected());
 
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -63,6 +62,7 @@ public class AdapterListarA extends RecyclerView.Adapter<AdapterListarA.Holder> 
 
         public void listarAprendices(Persona persona){
             checkBox.setText(persona.getNombres()+" "+persona.getApellidos());
+
         }
 
 

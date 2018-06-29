@@ -18,4 +18,5 @@ public class Constantes {
    public static final String urlRol="https://guperproject.herokuapp.com/api/Rol/";
    public static final String urlRolPersona="https://guperproject.herokuapp.com/api/Rol_persona/";
    public static final String urlUser="https://guperproject.herokuapp.com/api/user/";
+   public static final String urlCambiarContrasena="https://guperproject.herokuapp.com/rest-auth/password/change/";
 }
