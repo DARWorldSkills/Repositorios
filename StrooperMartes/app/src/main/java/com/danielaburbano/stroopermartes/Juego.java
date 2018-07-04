@@ -23,12 +23,13 @@ public class Juego extends AppCompatActivity  implements View.OnClickListener{
     int valorcito;
     int ipR, icR;
     boolean bandera= true;
+    int ab;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_juego);
         segundos = new int[]{0, 30};
-
+        ab=0;
         pCorrectas=0;
         pIncorrectas=0;
         pAcierto=0;
@@ -59,7 +60,7 @@ public class Juego extends AppCompatActivity  implements View.OnClickListener{
                         public void run() {
                             segundos[0] += 1;
                             segundos[1] = segundos[1] - 1;
-                            salir();
+
                             if (segundos[0] == 3) {
                                 pIncorrectas += 1;
                                 pIntentos += 1;
@@ -69,6 +70,7 @@ public class Juego extends AppCompatActivity  implements View.OnClickListener{
                             }
 
                             txtTiempo.setText("Seg: 00:" + segundos[1]);
+                            salir();
 
                         }
 
@@ -102,10 +104,13 @@ public class Juego extends AppCompatActivity  implements View.OnClickListener{
 
     public void salir(){
 
-        if (pIncorrectas==3 || segundos[1]==1){
+        if ((pIncorrectas==3 || segundos[1]==0)&& ab==0 ){
+            ab=1;
             Intent intent = new Intent(Juego.this,Resumen.class);
-            startActivity(intent);
             finish();
+            startActivity(intent);
+            insertarValores();
+
             bandera= false;
         }
     }

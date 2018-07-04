@@ -19,9 +19,7 @@ public class Configuracion extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuracion);
         inizialite();
-        SharedPreferences juego = getSharedPreferences("juego",Context.MODE_PRIVATE);
-        modoGame = juego.getInt("modo",0);
-        tiempo = juego.getInt("tiempo",0);
+
         insertarDatos();
     }
 
@@ -46,6 +44,9 @@ public class Configuracion extends AppCompatActivity implements View.OnClickList
     }
 
     public void insertarDatos(){
+        SharedPreferences juego = getSharedPreferences("juego",Context.MODE_PRIVATE);
+        modoGame = juego.getInt("modo",0);
+        tiempo = juego.getInt("tiempo",0);
         if (modoGame==1){
             rbtnTiempo.setChecked(true);
         }else {
@@ -65,11 +66,12 @@ public class Configuracion extends AppCompatActivity implements View.OnClickList
 
 
     public void salir(View view) {
-        insertarDatos();
+
         modoGame = input_mode_game();
         tiempo= Integer.parseInt(txttimepo.getText().toString());
         if (tiempo>1 && tiempo<10){
             guardarSesion();
+            insertarDatos();
             Intent intent = new Intent(Configuracion.this,JuegoC.class);
             startActivity(intent);
             finish();

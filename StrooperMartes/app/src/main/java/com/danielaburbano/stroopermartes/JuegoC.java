@@ -22,12 +22,13 @@ public class JuegoC extends AppCompatActivity implements View.OnClickListener{
     int valorcito;
     int ipR, icR;
     boolean bandera= true;
-
+    int ab=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_juego_c);
         segundos = new int[]{0, 30};
+        ab=0;
         pCorrectas=0;
         pIncorrectas=0;
         pAcierto=0;
@@ -37,7 +38,7 @@ public class JuegoC extends AppCompatActivity implements View.OnClickListener{
         listar();
         randomizar();
         if (Configuracion.modoGame==2){
-            segundos[0]=0;
+            segundos[1]=0;
         }
         insertarValores();
         txtTiempo.setText("Seg: 00:"+segundos[1]);
@@ -108,14 +109,16 @@ public class JuegoC extends AppCompatActivity implements View.OnClickListener{
     }
 
     public void salir(){
-        if ((pIncorrectas==3 || segundos[1]==0)&& Configuracion.modoGame==1){
+        if ((pIncorrectas==3 || segundos[1]==0)&& Configuracion.modoGame==1 && ab==0){
+            ab=1;
             Intent intent = new Intent(JuegoC.this,Resumen.class);
             startActivity(intent);
             finish();
             bandera= false;
         }
 
-        if ((pIncorrectas==3)&& Configuracion.modoGame==1){
+        if ((pIncorrectas==3)&& Configuracion.modoGame==2 && ab==0){
+            ab=1;
             Intent intent = new Intent(JuegoC.this,Resumen.class);
             startActivity(intent);
             finish();
