@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">StrooperMartes</string>
+    <string name="puntaje">Puntaje</string>
+    <string name="configuracion">Configuración</string>
+    <string name="jugar">Jugar</string>
+    <string name="Aciertos">Aciertos</string>
+    <string name="correctas">Correctas</string>
+    <string name="incorrectas">Incorrectas</string>
+    <string name="intentos">Intetos</string>
+    <string name="tiempo">Tiempo</string>
+    <string name="tiempolimite">Tiempo (que sea mayor o igual a uno y menor  igual a 10)</string>
+</resources>
