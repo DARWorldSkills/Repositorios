@@ -1,7 +1,6 @@
 package com.danielaburbano.stroopermartes;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,8 +18,9 @@ public class Configuracion extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuracion);
         inizialite();
-
-        insertarDatos();
+        SharedPreferences juego = getSharedPreferences("iniciarSesion",Context.MODE_PRIVATE);
+        modoGame = juego.getInt("user",0);
+        tiempo = juego.getInt("password",0);
     }
 
     private void inizialite() {
@@ -44,16 +44,13 @@ public class Configuracion extends AppCompatActivity implements View.OnClickList
     }
 
     public void insertarDatos(){
-        SharedPreferences juego = getSharedPreferences("juego",Context.MODE_PRIVATE);
-        modoGame = juego.getInt("modo",0);
-        tiempo = juego.getInt("tiempo",0);
         if (modoGame==1){
-            rbtnTiempo.setChecked(true);
+            rbtnTiempo.setSelected(true);
         }else {
             if (modoGame==2){
-                rbtnIntentos.setChecked(true);
+                rbtnIntentos.setSelected(true);
             }else {
-                rbtnTiempo.setChecked(true);
+                rbtnTiempo.setSelected(true);
             }
         }
 
@@ -66,21 +63,16 @@ public class Configuracion extends AppCompatActivity implements View.OnClickList
 
 
     public void salir(View view) {
-
         modoGame = input_mode_game();
         tiempo= Integer.parseInt(txttimepo.getText().toString());
-        if (tiempo>1 && tiempo<10){
+        if (tiempo>1 || tiempo<10){
             guardarSesion();
-            insertarDatos();
-            Intent intent = new Intent(Configuracion.this,JuegoC.class);
-            startActivity(intent);
-            finish();
         }else {
-            Toast.makeText(this, "No se puede guardar", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No se guardará el tiempo", Toast.LENGTH_SHORT).show();
         }
     }
     public void guardarSesion(){
-        SharedPreferences juego= getSharedPreferences("juego", Context.MODE_PRIVATE);
+        SharedPreferences juego= getSharedPreferences("iniciarSesion", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = juego.edit();
         editor.putInt("modo",modoGame);
         editor.putInt("tiempo",tiempo);
@@ -91,11 +83,5 @@ public class Configuracion extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
         
-    }
-
-    public void ir(View view) {
-        Intent intent = new Intent(Configuracion.this,Menu.class);
-        startActivity(intent);
-        finish();
     }
 }

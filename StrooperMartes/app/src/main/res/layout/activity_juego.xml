@@ -5,18 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/azulsocuro"
     tools:context="com.danielaburbano.stroopermartes.Juego">
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:src="@drawable/in"
-        android:layout_marginTop="30dp"
         android:layout_weight="2"/>
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:background="@color/naranja"
         android:layout_weight="2">
 
         <TextView
@@ -24,8 +20,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:textColor="@color/azulsocuro"
-            android:textSize="15dp"
             android:layout_marginStart="8dp"
             android:text="@string/Aciertos"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -36,8 +30,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:textSize="15dp"
-            android:textColor="@color/azulsocuro"
             android:layout_marginEnd="8dp"
             android:text="@string/tiempo"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -48,8 +40,6 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:textSize="15dp"
-            android:textColor="@color/azulsocuro"
             android:layout_marginTop="8dp"
             android:text="@string/correctas"
             android:textAlignment="textStart"
@@ -60,10 +50,8 @@
             android:id="@+id/txtintentos"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/azulsocuro"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:textSize="15dp"
             android:layout_marginTop="8dp"
             android:text="@string/intentos"
             android:textAlignment="center"
@@ -75,11 +63,9 @@
             android:id="@+id/txtincorrectas"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/azulsocuro"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
             android:text="@string/incorrectas"
-            android:textSize="15dp"
             android:textAlignment="textEnd"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -87,8 +73,6 @@
 
     <TextView
         android:id="@+id/txtPalabraJ"
-        android:textAlignment="center"
-        android:textSize="60dp"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_weight="1" />
